@@ -3,21 +3,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Firstpage extends JFrame {
-   boolean start;
-   JFrame frame;
-   private static Firstpage firstpage;
+    private static Firstpage firstpage;
+    boolean start;
+    JFrame frame;
 
-  static Firstpage getFirstpage(){
-       if(firstpage==null)
-       {
-          firstpage = new Firstpage();
-           return firstpage;
-       }
-       else
-           return firstpage;
-   }
-
-   private Firstpage(){
+    private Firstpage() {
         JFrame jframe = new JFrame("Battle of Tanks");
         this.frame = jframe;
         //submit button
@@ -41,8 +31,11 @@ public class Firstpage extends JFrame {
         label2.setBounds(10, 180, 200, 100);
         //add to frame
         jframe.add(label1);
-        jframe.add(label);  jframe.add(label2);
-        jframe.add(start);jframe.add(setting); jframe.add(exit);
+        jframe.add(label);
+        jframe.add(label2);
+        jframe.add(start);
+        jframe.add(setting);
+        jframe.add(exit);
         jframe.setSize(500, 500);
         jframe.setLayout(null);
         jframe.setVisible(true);
@@ -53,7 +46,7 @@ public class Firstpage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 Firstpage.this.frame.setVisible(false);
-                    Game.game();
+                Game.game();
             }
         });
 
@@ -66,5 +59,13 @@ public class Firstpage extends JFrame {
             }
         });
     }
+
+    static Firstpage getFirstpage() {
+        if (firstpage == null) {
+            firstpage = new Firstpage();
+            return firstpage;
+        } else
+            return firstpage;
     }
+}
 
