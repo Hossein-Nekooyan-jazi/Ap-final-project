@@ -14,7 +14,7 @@ public class Player {
             board.point++;
         }
         this.tank.x = 20+(int) (Math.random() * (Game.WIDTH-40));
-        this.tank.y= 100+(int)( Math.random() * (Game.HEIGHT-120));
+        this.tank.y= 100+(int)(Math.random() * (Game.HEIGHT-120));
     }
     Tank getTank(){return this.tank;}
 }

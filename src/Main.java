@@ -1,6 +1,7 @@
 import javax.swing.*;
 import  java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Time;
 
 public class Main{
@@ -12,6 +13,9 @@ public class Main{
             Game game = new Game();
             game.addKeyListener(new GameActionListener());
             game.setVisible(true);
+
+
+
             new Timer(10,
                     e->{ game.updateState(); game.repaint();
                     } ).start();

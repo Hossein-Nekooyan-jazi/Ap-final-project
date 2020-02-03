@@ -6,13 +6,13 @@ import java.util.List;
 
     public class Game extends JFrame {
         final static int WIDTH = 500, HEIGHT = 550;
-
+        int time = 0 ;
         List<Thing> everyThing = new ArrayList<>();
         Player player1 = new Player("Player 1", 10,30);
         Player player2 = new Player("Player 2" , 400,30);
         List<Shot> shotsInTheAir = new ArrayList<>();
         List<Wall> walls = new LinkedList<>();
-
+        List<Powrup> powrups = new LinkedList<>();
         Game() {
             this.setSize(Game.WIDTH, Game.HEIGHT);
             Wall leftEdge = new Wall(0, 50, Game.HEIGHT-50, true);
@@ -39,6 +39,16 @@ import java.util.List;
         }
 
         void updateState() {
+            this.time ++;
+            if(this.time%100 ==0) {
+                if(powrups.size()!=0) {
+                    this.everyThing.remove(powrups.get(0));
+                    powrups.remove(0);
+                }
+              Powrup powrup = new Powrup();
+                this.everyThing.add(powrup);
+                this.powrups.add(powrup);
+            }
             boolean contact= false;
             Tank p1Tank = this.player1.getTank();
             Tank p2Tank = this.player2.getTank();
@@ -125,6 +135,14 @@ import java.util.List;
                     e->{ game.updateState(); game.repaint();
                     } ).start();
         }
+        static int[] roundmx()
+        {
+            int[] cordinates= new int [2];
+            cordinates[0]= 20+(int) (Math.random() * (Game.WIDTH-40));
+            cordinates[1] = 100+(int)(Math.random() * (Game.HEIGHT-120));
+                    return cordinates;
+        }
+
         }
 
 
