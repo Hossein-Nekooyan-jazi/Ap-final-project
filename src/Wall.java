@@ -29,7 +29,6 @@ public class Wall extends Thing{
                  int height = (this.isVertical) ? this.i2 - this.i1 : Wall.WIDTH;
                  graphics.fillRect(this.getX(), this.getY(), width, height);
                  this.rec = new Rectangle(this.getX(), this.getY(), width, height);
-                 Toolkit.getDefaultToolkit().sync();
              }
              public boolean contacts(MovingThing thing) {
              if(thing.rec.intersects(this.rec))

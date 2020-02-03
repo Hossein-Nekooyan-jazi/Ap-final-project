@@ -24,7 +24,6 @@ public class Tank extends MovingThing {
                     Tank.RADIUS * 2,
                     Tank.RADIUS * 2);
             graphics.drawLine(this.x, this.y, this.getGunX(), this.getGunY());
-            Toolkit.getDefaultToolkit().sync();
 
     }
     int getGunX() {

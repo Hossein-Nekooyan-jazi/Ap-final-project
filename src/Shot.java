@@ -16,7 +16,6 @@ public class Shot extends MovingThing {
                 Shot.RADIUS * 2, Shot.RADIUS * 2);
         graphics.fillRect(this.x-Shot.RADIUS , this.y - Shot.RADIUS,
                 Shot.RADIUS * 2, Shot.RADIUS * 2);
-        Toolkit.getDefaultToolkit().sync();
     }
 
     int getX(){return this.x ;
