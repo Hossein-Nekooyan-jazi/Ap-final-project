@@ -1,5 +1,5 @@
 public class Player {
-    Tank tank = new Tank(200, 300, 0);
+    Tank tank = new Tank(0, 0, 0);
     int points = 0;
     String name;
     BoardofScores board;
@@ -14,8 +14,10 @@ public class Player {
             this.points++;
             board.point++;
         }
-        this.tank.x = 20 + (int) (Math.random() * (Game.WIDTH - 40));
-        this.tank.y = 100 + (int) (Math.random() * (Game.HEIGHT - 120));
+        this.tank.jump(
+                20 + (int) (Math.random() * (Game.WIDTH - 40)),
+                100 + (int) (Math.random() * (Game.HEIGHT - 120))
+        );
     }
 
     Tank getTank() {

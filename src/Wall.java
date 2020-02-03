@@ -7,19 +7,19 @@ public class Wall extends Thing {
     boolean isVertical;
 
     public Wall(int x, int y, int length, boolean isVertical) {
-        super(x, y, new Rectangle(0, 0, 0, 0));
+        super(null);
         this.isVertical = isVertical;
         if (isVertical) {
             this.i1 = y;
             this.i2 = y + length;
             this.j = x;
-            this.rec = new Rectangle(x, y, Wall.WIDTH, length);
+            this.shape = new Rectangle(x, y, Wall.WIDTH, length);
 
         } else {
             this.i1 = x;
             this.i2 = x + length;
             this.j = y;
-            this.rec = new Rectangle(x, y, length, Wall.WIDTH);
+            this.shape = new Rectangle(x, y, length, Wall.WIDTH);
         }
 
     }
@@ -30,10 +30,6 @@ public class Wall extends Thing {
         int width = (this.isVertical) ? Wall.WIDTH : this.i2 - this.i1;
         int height = (this.isVertical) ? this.i2 - this.i1 : Wall.WIDTH;
         graphics.fillRect(this.getX(), this.getY(), width, height);
-        this.rec = new Rectangle(this.getX(), this.getY(), width, height);
-    }
-
-    public boolean contacts(MovingThing thing) {
-        return thing.rec.intersects(this.rec);
+        this.shape = new Rectangle(this.getX(), this.getY(), width, height);
     }
 }

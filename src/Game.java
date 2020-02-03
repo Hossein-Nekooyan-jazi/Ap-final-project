@@ -31,7 +31,7 @@ public class Game extends JFrame {
 
         this.player1.newRound(false);
         this.player2.newRound(false);
-        this.player1.tank.x += 50;
+        this.player1.tank.move(50, 0);
         this.everyThing.add(player1.getTank());
         this.everyThing.add(player2.getTank());
         this.everyThing.add(player1.board);
@@ -110,10 +110,10 @@ public class Game extends JFrame {
                 this.getKeyListeners()[0];
         this.addKeyListener(listener);
         if (listener.p1Move) {
-            if (player1.tank.contacts(p2Tank))
+            if (p1Tank.contacts(p2Tank))
                 p1Tank.direction = Math.PI + p1Tank.direction;
             for (Wall wall : this.walls) {
-                if (p1Tank.rec.intersects(wall.rec))
+                if (p1Tank.contacts(wall))
                     p1Tank.bounceAgainst(wall);
             }
             p1Tank.step();
@@ -138,7 +138,7 @@ public class Game extends JFrame {
 
     public void paint(Graphics graphics) {
         super.paint(graphics);
-        this.everyThing.forEach(thing -> thing.draw(graphics));
+        this.everyThing.forEach(thing -> thing.draw((Graphics2D) graphics));
         Toolkit.getDefaultToolkit().sync();
     }
 

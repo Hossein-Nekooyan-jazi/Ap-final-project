@@ -7,11 +7,9 @@ public class Powrup extends Thing {
     PowerUptype type;
 
     Powrup() {
-        super(0, 0, new Rectangle(0, 0, 10, 10));
+        super(null);
         int[] cordinates = Game.roundmx();
-        this.x = cordinates[0];
-        this.y = cordinates[1];
-        this.rec = new Rectangle(this.x, this.y, 10, 10);
+        this.shape = new Rectangle(cordinates[0], cordinates[1], 10, 10);
         if (Math.round(Math.random() * 2) % 2 == 0)
             this.type = PowerUptype.FragBomb;
         else
@@ -20,12 +18,12 @@ public class Powrup extends Thing {
     }
 
     @Override
-    void draw(Graphics graphics) {
+    void draw(Graphics2D graphics) {
         if (this.type == PowerUptype.FragBomb)
             graphics.setColor(Color.blue);
         else
             graphics.setColor(Color.RED);
 
-        graphics.fillRect(this.x, this.y, 10, 10);
+        super.draw(graphics);
     }
 }
