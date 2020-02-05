@@ -132,6 +132,7 @@ public class Game extends JFrame {
             );
             this.shotsInTheAir.add(shot);
             this.everyThing.add(shot);
+            listener.p1Fire = false;
         }
 
     }
