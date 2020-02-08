@@ -1,40 +1,47 @@
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
-public abstract class MovingThing extends Thing{
-         double direction; // rad
-         float velocity; // px/step
-         float angularVelocity; // rad/step
+public class MovingThing extends Thing {
+    double direction; // rad
+    float velocity; // px/step
+    float angularVelocity; // rad/step
 
-         MovingThing(int x, int y, float v, float aV, double d , Rectangle rec) {
-         super(x, y,rec);
-         this.velocity = v;
-         this.direction = d;
-         this.angularVelocity = aV;
-         }
+    MovingThing(float v, float aV, double d, Shape shape) {
+        super(shape);
+        this.velocity = v;
+        this.direction = d;
+        this.angularVelocity = aV;
+    }
 
-         private void changeDirection(double amount) {
-         this.direction = this.direction + amount;
-        }
+    private void changeDirection(double amount) {
+        this.direction = (this.direction + amount) % (2 * Math.PI);
+        AffineTransform r = new AffineTransform();
+        r.rotate(amount, this.getX(), this.getY());
+        this.shape = r.createTransformedShape(this.shape);
+    }
 
-         public void turnLeft() {
-         this.changeDirection(this.angularVelocity);
-        }
+    public void turnLeft() {
+        this.changeDirection(this.angularVelocity);
+    }
 
-         public void turnRight() {
-         this.changeDirection(- this.angularVelocity);
-        }
-         void step() {
-          this.x += Math.round(this.velocity * Math.cos(this.direction));
-         this.y += Math.round(this.velocity * Math.sin(this.direction));
-        }
-    void bounceAgainst(Wall wall)
-    {
+    public void turnRight() {
+        this.changeDirection(-this.angularVelocity);
+    }
+
+    void step() {
+        AffineTransform t = new AffineTransform();
+        t.translate(
+                Math.round(this.velocity * Math.cos(this.direction)),
+                Math.round(this.velocity * Math.sin(this.direction))
+        );
+        this.shape = t.createTransformedShape(this.shape);
+    }
+
+    void bounceAgainst(Wall wall) {
         if (wall.isVertical)
-                this.direction = Math.PI - this.direction;
+            this.changeDirection(-2 * this.direction + Math.PI);
         else
 
-                this.direction =  - this.direction;
+            this.changeDirection(-2 * this.direction);
     }
-    abstract int getRadius();
-
-    }
+}

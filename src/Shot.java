@@ -1,30 +1,27 @@
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 public class Shot extends MovingThing {
-    final static int RADIUS = 10;
-    final static int LIFE = 100;
+    final static int RADIUS = 5;
+    final static int LIFE = 1000;
 
     int age = Shot.LIFE;
+
     Shot(int x, int y, double direction) {
-        super(x, y, 3, 0, direction , new Rectangle(x-Shot.RADIUS , y - Shot.RADIUS,
+        super(10, 0, direction, new Ellipse2D.Double(x - Shot.RADIUS, y - Shot.RADIUS,
                 Shot.RADIUS * 2, Shot.RADIUS * 2));
     }
 
-    void draw(Graphics graphics) {
-        graphics.setColor(Color.BLACK);
-        this.rec = new Rectangle(this.x-Shot.RADIUS , this.y - Shot.RADIUS,
-                Shot.RADIUS * 2, Shot.RADIUS * 2);
-        graphics.fillRect(this.x-Shot.RADIUS , this.y - Shot.RADIUS,
-                Shot.RADIUS * 2, Shot.RADIUS * 2);
-        Toolkit.getDefaultToolkit().sync();
+    void draw(Graphics2D graphics) {
+        graphics.setColor(Color.RED);
+        super.draw(graphics);
     }
 
-    int getX(){return this.x ;
+    void growOld() {
+        this.age--;
     }
-    int getY(){return this.y;}
-    void growOld() { this.age--; }
+
     boolean isDead() {
         return this.age <= 0;
     }
-    int getRadius(){return Shot.RADIUS;}
 }
