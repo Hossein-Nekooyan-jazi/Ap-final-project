@@ -3,9 +3,10 @@ public class Player {
     int points = 0;
     String name;
     BoardofScores board;
-
-    Player(String name, int x, int y) {
+    int shotsfired = 0;
+    Player(String name, int x, int y ,int shotsfired  ) {
         this.name = name;
+        this.shotsfired = shotsfired;
         this.board = new BoardofScores(this.points, x, y, this.name);
     }
 
@@ -18,6 +19,7 @@ public class Player {
                 20 + (int) (Math.random() * (Game.WIDTH - 40)),
                 100 + (int) (Math.random() * (Game.HEIGHT - 120))
         );
+        this.shotsfired=0;
     }
 
     Tank getTank() {

@@ -3,7 +3,7 @@ import java.awt.geom.Ellipse2D;
 
 public class Shot extends MovingThing {
     final static int RADIUS = 5;
-    final static int LIFE = 1000;
+    final static int LIFE = 100;
 
     int age = Shot.LIFE;
 

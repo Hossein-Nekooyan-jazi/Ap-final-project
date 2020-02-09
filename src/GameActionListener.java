@@ -2,11 +2,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class GameActionListener extends KeyAdapter {
-    boolean p1Move, p1Left, p1Right, p1Fire,
+    boolean p1Move, p1Left, p1Right, p1Fire, firstpage, exit,
             p2Move, p2Left, p2Right, p2Fire,
             escape;
-    Tank p1tank, p2tank;
-
+    Tank p1tank,p2tank;
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
@@ -21,10 +20,15 @@ public class GameActionListener extends KeyAdapter {
             case KeyEvent.VK_DOWN:
                 this.p1Fire = true;
                 break;
+            case KeyEvent.VK_E:
+                this.exit = true;
+                break;
+            case KeyEvent.VK_R:
+                this.firstpage=true;
+                break;
         }
         e.consume();
     }
-
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
@@ -38,6 +42,12 @@ public class GameActionListener extends KeyAdapter {
                 break;
             case KeyEvent.VK_DOWN:
                 this.p1Fire = false;
+                break;
+            case KeyEvent.VK_E:
+                this.exit = false;
+                break;
+            case KeyEvent.VK_R:
+                this.firstpage=false;
                 break;
         }
         e.consume();

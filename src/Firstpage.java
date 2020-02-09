@@ -67,5 +67,11 @@ public class Firstpage extends JFrame {
         } else
             return firstpage;
     }
+
+     static void firstpag() {
+        Firstpage firstpage = Firstpage.getFirstpage();
+        if (!firstpage.frame.isVisible())
+            firstpage.frame.setVisible(true);
+    }
 }
 

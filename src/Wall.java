@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class Wall extends Thing {
-    final static int WIDTH = 10; // px
+    final static int WIDTH = 25; // px
 
     int i1, i2, j;
     boolean isVertical;
