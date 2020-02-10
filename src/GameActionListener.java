@@ -3,9 +3,8 @@ import java.awt.event.KeyEvent;
 
 public class GameActionListener extends KeyAdapter {
     boolean p1Move, p1Left, p1Right, p1Fire, firstpage, exit,
-            p2Move, p2Left, p2Right, p2Fire,
-            escape;
-    Tank p1tank,p2tank;
+            p2Move, p2Left, p2Right, p2Fire;
+
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_LEFT:
@@ -26,6 +25,19 @@ public class GameActionListener extends KeyAdapter {
             case KeyEvent.VK_R:
                 this.firstpage=true;
                 break;
+            case KeyEvent.VK_A:
+                this.p2Left = true;
+                break;
+            case KeyEvent.VK_D:
+                this.p2Right = true;
+                break;
+            case KeyEvent.VK_W:
+                this.p2Move = true;
+                break;
+            case KeyEvent.VK_S:
+                this.p2Fire = true;
+                break;
+
         }
         e.consume();
     }
@@ -49,6 +61,19 @@ public class GameActionListener extends KeyAdapter {
             case KeyEvent.VK_R:
                 this.firstpage=false;
                 break;
+            case KeyEvent.VK_D:
+                this.p2Right = false;
+                break;
+            case KeyEvent.VK_A:
+                this.p2Left = false;
+                break;
+            case KeyEvent.VK_W:
+                this.p2Move = false;
+                break;
+            case KeyEvent.VK_S:
+                this.p2Fire = false;
+                break;
+
         }
         e.consume();
     }

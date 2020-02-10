@@ -16,7 +16,8 @@ public class Game extends JFrame {
     List<Thing> everyThing = new ArrayList<>();
     Player player1 = new Player("Player 1", 10, 30,0);
     Player player2 = new Player("Player 2", 400, 30,0);
-    List<Shot> shotsInTheAir = new ArrayList<>();
+    List<Shot> shotsInTheAirplayer1 = new ArrayList<>();
+    List<Shot> ShotsInTheAirplayer2 = new ArrayList<>();
     List<Wall> walls = new LinkedList<>();
     List<Powrup> powrups = new LinkedList<>();
     JLabel shotsalarmplayer1 = new JLabel();
@@ -82,7 +83,8 @@ public class Game extends JFrame {
         RoundChecker(event);
         this.time++;
         powerupMaker();
-        boolean contact = false;
+        boolean contactplayer2 = false;
+        boolean contactplayer1 = false;
         Tank p1Tank = this.player1.getTank();
         Tank p2Tank = this.player2.getTank();
 
@@ -90,15 +92,21 @@ public class Game extends JFrame {
         for (Wall wall : this.walls) {
             if(p1Tank.shape.intersects((Rectangle)wall.shape)) {
                 p1Tank.bounceAgainst(wall);
-                    p1Tank.step();p1Tank.step();
+             p1Tank.step();p1Tank.step();
             }
+
+            if(p2Tank.shape.intersects((Rectangle)wall.shape)) {
+                p2Tank.bounceAgainst(wall);
+                p2Tank.step();p2Tank.step();
+            }
+
         }
 
-        for (int n = 0; (n < shotsInTheAir.size() && !contact); n++) {
-            Shot shot = shotsInTheAir.get(n);
+        for (int n = 0; (n < shotsInTheAirplayer1.size() && !contactplayer2); n++) {
+            Shot shot = shotsInTheAirplayer1.get(n);
             for (Wall wall : this.walls) {
                 if (p2Tank.contacts(shot)) {
-                    contact = true;
+                    contactplayer2 = true;
                     break;
                 }
                 if (wall.contacts(shot)) {
@@ -106,20 +114,47 @@ public class Game extends JFrame {
                     break;
                 }
             }
-            if (contact)
+            if (contactplayer2)
                 break;
             shot.step();
         }
-        if (contact) {
-          newround();
+
+        for (int n = 0; (n < ShotsInTheAirplayer2.size() && !contactplayer2); n++) {
+            Shot shot = ShotsInTheAirplayer2.get(n);
+            for (Wall wall : this.walls) {
+                if (p1Tank.contacts(shot)) {
+                    contactplayer1 = true;
+                    break;
+                }
+                if (wall.contacts(shot)) {
+                    shot.bounceAgainst(wall);
+                    break;
+                }
+            }
+            if (contactplayer1)
+                break;
+            shot.step();
+        }
+        if (contactplayer2 || contactplayer1) {
+            newround(contactplayer1,contactplayer2);
         }
 
-        this.shotsInTheAir.forEach(Shot::growOld);
-
-        for (int n = 0; n < shotsInTheAir.size(); n++) {
-            Shot shot = shotsInTheAir.get(n);
+        this.shotsInTheAirplayer1.forEach(Shot::growOld);
+        this.ShotsInTheAirplayer2.forEach(Shot::growOld);
+        for (int n = 0; n < shotsInTheAirplayer1.size(); n++) {
+            Shot shot = shotsInTheAirplayer1.get(n);
             if (shot.isDead()) {
-                shotsInTheAir.remove(shot);
+                shotsInTheAirplayer1.remove(shot);
+                everyThing.remove(shot);
+            }
+
+
+
+        }
+        for (int n = 0; n < ShotsInTheAirplayer2.size(); n++) {
+            Shot shot = ShotsInTheAirplayer2.get(n);
+            if (shot.isDead()) {
+                ShotsInTheAirplayer2.remove(shot);
                 everyThing.remove(shot);
             }
 
@@ -128,6 +163,7 @@ public class Game extends JFrame {
         GameActionListener listener = (GameActionListener)
                 this.getKeyListeners()[0];
        keyresponse(listener , p1Tank,p2Tank,event);
+       keyresponsePlayer2(listener,p1Tank,p2Tank);
 
     }
 
@@ -169,9 +205,9 @@ public class Game extends JFrame {
 
         if (listener.p1Fire && player1.shotsfired< this.shotlimit) {
             Shot shot = new Shot(
-                    p1Tank.getGunX(), p1Tank.getGunY(), p1Tank.direction
+                    p1Tank.getGunX(), p1Tank.getGunY(), p1Tank.direction , Color.RED
             );
-            this.shotsInTheAir.add(shot);
+            this.shotsInTheAirplayer1.add(shot);
             this.everyThing.add(shot);
             this.player1.shotsfired++;
         }
@@ -193,16 +229,61 @@ public class Game extends JFrame {
         }
 
     }
-
-    void newround()
+    void keyresponsePlayer2(GameActionListener listener ,Tank p1Tank , Tank p2Tank)
     {
-        this.player1.newRound(true);
-        this.player2.newRound(false);
-        while(shotsInTheAir.size()!=0)
+        if(listener.p2Move)
         {
-            this.everyThing.remove(shotsInTheAir.get(0));
-            this.shotsInTheAir.remove(shotsInTheAir.get(0));
+            if(player1.tank.contacts(p2Tank))
+                p2Tank.direction = Math.PI + p2Tank.direction;
+
+            p2Tank.step();
         }
+
+        if(listener.p2Right)
+            p2Tank.turnRight();
+        if(listener.p2Left)
+            p2Tank.turnLeft();
+
+        if (listener.p2Fire && player2.shotsfired< this.shotlimit) {
+            Shot shot = new Shot(
+                    p2Tank.getGunX(), p2Tank.getGunY(), p2Tank.direction,Color.blue
+            );
+            this.ShotsInTheAirplayer2.add(shot);
+            this.everyThing.add(shot);
+            this.player2.shotsfired++;
+        }
+
+    }
+
+    void newround(boolean contactplayer1,boolean contactplayer2)
+    {
+        if(contactplayer2) {
+            this.player1.newRound(true);
+            this.player2.newRound(false);
+        }
+        if(contactplayer1)
+        {
+            this.player1.newRound(false);
+            this.player2.newRound(true);
+        }
+        if(!contactplayer1&&!contactplayer2)
+        {
+            this.player1.newRound(false);
+            this.player2.newRound(false);
+        }
+        while(shotsInTheAirplayer1.size()!=0)
+        {
+            this.everyThing.remove(shotsInTheAirplayer1.get(0));
+            this.shotsInTheAirplayer1.remove(shotsInTheAirplayer1.get(0));
+        }
+
+        while(ShotsInTheAirplayer2.size()!=0)
+        {
+            this.everyThing.remove(ShotsInTheAirplayer2.get(0));
+            this.ShotsInTheAirplayer2.remove(ShotsInTheAirplayer2.get(0));
+        }
+        shotsalarmplayer1.setText("");
+        shotsalarmplayer2.setText("");
     }
 
     void shotlimitchecker(Player player1 , Player player2)
@@ -214,7 +295,7 @@ public class Game extends JFrame {
 
             this.shotsalarmplayer2.setText("No Bullets");
         if(player1.shotsfired>= this.shotlimit && player2.shotsfired>=this.shotlimit)
-            newround();
+            newround(false,false);
 
     }
 

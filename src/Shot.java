@@ -6,14 +6,15 @@ public class Shot extends MovingThing {
     final static int LIFE = 100;
 
     int age = Shot.LIFE;
-
-    Shot(int x, int y, double direction) {
+    Color shotcolor;
+    Shot(int x, int y, double direction,Color color) {
         super(10, 0, direction, new Ellipse2D.Double(x - Shot.RADIUS, y - Shot.RADIUS,
                 Shot.RADIUS * 2, Shot.RADIUS * 2));
+        this.shotcolor = color;
     }
 
     void draw(Graphics2D graphics) {
-        graphics.setColor(Color.RED);
+        graphics.setColor(shotcolor);
         super.draw(graphics);
     }
 

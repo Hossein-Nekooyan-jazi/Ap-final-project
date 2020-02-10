@@ -45,7 +45,7 @@ public class Firstpage extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                Firstpage.this.frame.setVisible(false);
+              frame.setVisible(false);
                 Game.game();
             }
         });
@@ -56,6 +56,13 @@ public class Firstpage extends JFrame {
                 System.exit(0); // stop program
                 frame.dispose(); // close window
                 frame.setVisible(false);
+            }
+        });
+        setting.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+                Setting.Settingpage(20,3,1);
             }
         });
     }
