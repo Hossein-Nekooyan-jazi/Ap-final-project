@@ -305,7 +305,7 @@ public class Game extends JFrame {
         if (player1.points == this.roundtoWin) {
             ((Timer) event.getSource()).stop();
             JLabel Wininglabel = new JLabel();
-            Wininglabel.setBounds(250, 250, 200, 100);
+            Wininglabel.setBounds(250, 250, 400, 100);
             Wininglabel.setText("Player 1 Wins " + "\n" + "Press E to Exit or R to First Page");
             this.add(Wininglabel);
 
@@ -346,16 +346,35 @@ public class Game extends JFrame {
             for(int row =0 ; row <map.length ; row++) {
                 for (int column = 0; column < map[row].length; column++) {
                     if (map[row][column].equals("|")) {
-                        Wall wall = new Wall(column * 25, row * 25, 25, true);
+                        Wall wall = new Wall(column * 25, row * 25, 25, true, true);
                         this.everyThing.add(wall);
                         this.walls.add(wall);
                     }
                     if (map[row][column].equals("-")) {
-                        Wall wall = new Wall(column * 25, row * 25, 25, false);
+                        Wall wall = new Wall(column * 25, row * 25, 25, false, true);
                         this.everyThing.add(wall);
                         this.walls.add(wall);
                     }
-
+                    if (map[row][column].equals("_"))
+                    {
+                       Wall wall;
+                       if(map[row+1][column].equals(" "))
+                         wall = new Wall(column * 25, row * 25, 25, false,false);
+                       else
+                           wall = new Wall(column * 25 , row * 25 +24, 25, false,false);
+                        this.everyThing.add(wall);
+                        this.walls.add(wall);
+                    }
+                    if (map[row][column].equals("/"))
+                    {
+                        Wall wall;
+                        if(map[row][column+1].equals(" "))
+                              wall = new Wall(column * 25, row * 25, 25, true,false);
+                        else
+                             wall = new Wall(column * 25 +24, row * 25, 25, true,false);
+                        this.everyThing.add(wall);
+                        this.walls.add(wall);
+                    }
                 }
             }
 
