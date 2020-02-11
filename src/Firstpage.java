@@ -6,7 +6,7 @@ public class Firstpage extends JFrame {
     private static Firstpage firstpage;
     boolean start;
     JFrame frame;
-   private static int shotslimit=20;
+   private static int shotslimit=9;
    private static int roundstowin = 3;
    private static int map = 1;
     private Firstpage() {

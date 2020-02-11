@@ -108,7 +108,7 @@ public class Game extends JFrame {
     ) {
         RoundChecker(event);
         this.time++;
-     //   powerupMaker();
+        powerupMaker();
        Timershotfunction();
 
         boolean contactplayer2 = false;

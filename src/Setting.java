@@ -4,6 +4,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,7 +25,7 @@ public class Setting extends JFrame {
 
     private JFormattedTextField shotslimittext;
     private JFormattedTextField roundstowintext;
-
+    private KeyEvent A_key;
 
     private Setting(int shotlimit , int roundstowin , int Maptochoose)
     {
@@ -38,21 +40,22 @@ public class Setting extends JFrame {
         frame.setSize(500,500);
         frame.setVisible(true);
         frame.setLayout(null);
-
         strtbutton();
-
 
         JLabel shotslimitlabel = new JLabel("Shots Limit:");
      shotslimitlabel.setBounds(50,100,100,20);
         JLabel roundstowinlabel = new JLabel("Rounds to Win:");
         roundstowinlabel.setBounds(50,150,100,20);
 
-        this.shotslimittext = new JFormattedTextField(new DecimalFormat("#;"));
+        NumberFormat numberFormat = new DecimalFormat("#;");
+        numberFormat.setMaximumIntegerDigits(1);
+        numberFormat.setMinimumIntegerDigits(1);
+
+        this.shotslimittext = new JFormattedTextField(numberFormat);
         shotslimittext.setValue(shotlimit);
         shotslimittext.setColumns(10);
        shotslimittext.setBounds(150,100,100,20);
-
-       this.roundstowintext = new JFormattedTextField(new DecimalFormat("#;"));
+       this.roundstowintext = new JFormattedTextField(numberFormat);
         roundstowintext.setValue(roundstowin);
         roundstowintext.setColumns(10);
         roundstowintext.setBounds(150,150,100,20);
