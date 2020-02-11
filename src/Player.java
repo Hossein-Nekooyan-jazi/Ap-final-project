@@ -4,6 +4,7 @@ public class Player {
     String name;
     BoardofScores board;
     int shotsfired = 0;
+    private int timershot =0;
     Player(String name, int x, int y ,int shotsfired  ) {
         this.name = name;
         this.shotsfired = shotsfired;
@@ -15,14 +16,25 @@ public class Player {
             this.points++;
             board.point++;
         }
-        this.tank.jump(
-                20 + (int) (Math.random() * (Game.WIDTH - 40)),
-                100 + (int) (Math.random() * (Game.HEIGHT - 120))
-        );
         this.shotsfired=0;
+        this.timershot=0;
+        this.getTank().setShotisReady(true);
     }
 
     Tank getTank() {
         return this.tank;
+    }
+
+
+    public void setTimershot(int timershot) {
+        this.timershot = timershot;
+    }
+    public void Timeradd()
+    {
+        this.timershot++;
+    }
+
+    public int getTimershot() {
+        return timershot;
     }
 }

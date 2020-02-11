@@ -5,13 +5,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Game extends JFrame {
-    final static int WIDTH = 500, HEIGHT = 550;
+    final static int WIDTH = 500, HEIGHT = 600;
     int time = 0;
     List<Thing> everyThing = new ArrayList<>();
     Player player1 = new Player("Player 1", 10, 30,0);
@@ -22,9 +23,10 @@ public class Game extends JFrame {
     List<Powrup> powrups = new LinkedList<>();
     JLabel shotsalarmplayer1 = new JLabel();
     JLabel shotsalarmplayer2 = new JLabel();
+    List<Thing> innerthings = new LinkedList<>();
 
     int shotlimit;
-    boolean stop;
+
     int roundtoWin;
 
     Game(int shotlimit , int roundtoWin ,int map_number) {
@@ -51,9 +53,16 @@ public class Game extends JFrame {
         map_reader(map_number);
         this.player1.newRound(false);
         this.player2.newRound(false);
+        int[] cordinates = roundmx(innerthings);
+        this.player1.getTank().jump(cordinates[0] , cordinates[1]);
+        cordinates = roundmx(innerthings);
+        this.player2.getTank().jump(cordinates[0], cordinates[1]);
 
-        this.everyThing.add(player1.getTank());
-        this.everyThing.add(player2.getTank());
+
+       this.everyThing.add(player1.getTank());
+       this.everyThing.add(player2.getTank());
+       this.innerthings.add(player2.getTank());
+       this.innerthings.add(player1.getTank());
         this.everyThing.add(player1.board);
         this.everyThing.add(player2.board);
 
@@ -71,10 +80,27 @@ public class Game extends JFrame {
                 }).start();
     }
 
-    static int[] roundmx() {
+    static int[] roundmx(List<Thing> innerthings) {
         int[] cordinates = new int[2];
-        cordinates[0] = 20 + (int) (Math.random() * (Game.WIDTH - 40));
-        cordinates[1] = 100 + (int) (Math.random() * (Game.HEIGHT - 120));
+        cordinates[0] = 50 + (int) (Math.random() * (Game.WIDTH - 100));
+        cordinates[1] = 100 + (int) (Math.random() * (Game.HEIGHT - 150));
+       Rectangle roundomshape =  new Rectangle(cordinates[0], cordinates[1] ,
+                25, 25);
+
+       boolean noContact = true;
+       while(true) {
+           for (Thing thing : innerthings) {
+                    if(thing.shape.intersects(roundomshape)) {
+                        noContact = false;
+                        break;
+                    }
+           }
+           if(noContact)
+               break;
+           cordinates[0] = 50 + (int) (Math.random() * (Game.WIDTH - 100));
+           cordinates[1] = 100 + (int) (Math.random() * (Game.HEIGHT - 150));
+            roundomshape =  new Rectangle(cordinates[0], cordinates[1],25,25);
+       }
         return cordinates;
     }
 
@@ -83,6 +109,8 @@ public class Game extends JFrame {
         RoundChecker(event);
         this.time++;
         powerupMaker();
+       Timershotfunction();
+
         boolean contactplayer2 = false;
         boolean contactplayer1 = false;
         Tank p1Tank = this.player1.getTank();
@@ -111,6 +139,7 @@ public class Game extends JFrame {
                 }
                 if (wall.contacts(shot)) {
                     shot.bounceAgainst(wall);
+                    shot.step();
                     break;
                 }
             }
@@ -128,6 +157,7 @@ public class Game extends JFrame {
                 }
                 if (wall.contacts(shot)) {
                     shot.bounceAgainst(wall);
+                    shot.step();
                     break;
                 }
             }
@@ -173,15 +203,37 @@ public class Game extends JFrame {
         Toolkit.getDefaultToolkit().sync();
     }
 
-
+ private void Timershotfunction()
+ {
+     if(player1.getTimershot()!=0)
+         player1.Timeradd();
+     if(player1.getTimershot()%100 ==0)
+     {
+         player1.setTimershot(0);
+         player1.getTank().setShotisReady(true);
+     }
+     if(player2.getTimershot()!=0)
+         player2.Timeradd();
+     if(player2.getTimershot()%100 ==0)
+     {
+         player2.setTimershot(0);
+         player2.getTank().setShotisReady(true);
+     }
+ }
     void powerupMaker()
     {
         if(this.time%300 ==0) {
             if(powrups.size()!=0) {
                 this.everyThing.remove(powrups.get(0));
+                this.innerthings.remove(powrups.get(0));
                 powrups.remove(0);
+
             }
             Powrup powrup = new Powrup();
+
+            int[] cordinates = roundmx(this.innerthings);
+            Shape shape = new Rectangle(cordinates[0], cordinates[1], 10, 10);
+            powrup.setShape(shape);
             this.everyThing.add(powrup);
             this.powrups.add(powrup);
         }
@@ -203,10 +255,12 @@ public class Game extends JFrame {
         if (listener.p1Left)
             p1Tank.turnLeft();
 
-        if (listener.p1Fire && player1.shotsfired< this.shotlimit) {
+        if (listener.p1Fire && player1.shotsfired< this.shotlimit && player1.getTank().isShotisReady()) {
             Shot shot = new Shot(
                     p1Tank.getGunX(), p1Tank.getGunY(), p1Tank.direction , Color.RED
             );
+            player1.setTimershot(1);
+            player1.getTank().setShotisReady(false);
             this.shotsInTheAirplayer1.add(shot);
             this.everyThing.add(shot);
             this.player1.shotsfired++;
@@ -244,10 +298,14 @@ public class Game extends JFrame {
         if(listener.p2Left)
             p2Tank.turnLeft();
 
-        if (listener.p2Fire && player2.shotsfired< this.shotlimit) {
+        if (listener.p2Fire && player2.shotsfired< this.shotlimit && player2.getTank().isShotisReady()) {
             Shot shot = new Shot(
                     p2Tank.getGunX(), p2Tank.getGunY(), p2Tank.direction,Color.blue
             );
+
+            player2.setTimershot(1);
+            player2.getTank().setShotisReady(false);
+
             this.ShotsInTheAirplayer2.add(shot);
             this.everyThing.add(shot);
             this.player2.shotsfired++;
@@ -284,6 +342,11 @@ public class Game extends JFrame {
         }
         shotsalarmplayer1.setText("");
         shotsalarmplayer2.setText("");
+
+        int[] cordinates = roundmx(innerthings);
+        this.player1.getTank().jump(cordinates[0] , cordinates[1]);
+        cordinates = roundmx(innerthings);
+        this.player2.getTank().jump(cordinates[0], cordinates[1]);
     }
 
     void shotlimitchecker(Player player1 , Player player2)
@@ -305,7 +368,7 @@ public class Game extends JFrame {
         if (player1.points == this.roundtoWin) {
             ((Timer) event.getSource()).stop();
             JLabel Wininglabel = new JLabel();
-            Wininglabel.setBounds(250, 250, 400, 100);
+            Wininglabel.setBounds(100, 250, 400, 100);
             Wininglabel.setText("Player 1 Wins " + "\n" + "Press E to Exit or R to First Page");
             this.add(Wininglabel);
 
@@ -330,7 +393,7 @@ public class Game extends JFrame {
         {
             ((Timer)event.getSource()).stop();
             JLabel Wininglabel  = new JLabel();
-            Wininglabel.setBounds(250,250,200,100);
+            Wininglabel.setBounds(200,250,200,100);
             Wininglabel.setText("Player 2 Wins " +"/n" + "Press E to Exit or R to First Page");
             this.add(Wininglabel);
         }
@@ -349,9 +412,14 @@ public class Game extends JFrame {
                         Wall wall = new Wall(column * 25, row * 25, 25, true, true);
                         this.everyThing.add(wall);
                         this.walls.add(wall);
+                        if ( column!= 0 && column!= map[2].length-1)
+                            this.innerthings.add(wall);
+
                     }
                     if (map[row][column].equals("-")) {
                         Wall wall = new Wall(column * 25, row * 25, 25, false, true);
+                        if(row!= 2 && row != map.length-1)
+                            this.innerthings.add(wall);
                         this.everyThing.add(wall);
                         this.walls.add(wall);
                     }
@@ -364,6 +432,7 @@ public class Game extends JFrame {
                            wall = new Wall(column * 25 , row * 25 +24, 25, false,false);
                         this.everyThing.add(wall);
                         this.walls.add(wall);
+                        this.innerthings.add(wall);
                     }
                     if (map[row][column].equals("/"))
                     {
@@ -374,6 +443,7 @@ public class Game extends JFrame {
                              wall = new Wall(column * 25 +24, row * 25, 25, true,false);
                         this.everyThing.add(wall);
                         this.walls.add(wall);
+                        this.innerthings.add(wall);
                     }
                 }
             }

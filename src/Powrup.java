@@ -8,8 +8,6 @@ public class Powrup extends Thing {
 
     Powrup() {
         super(null);
-        int[] cordinates = Game.roundmx();
-        this.shape = new Rectangle(cordinates[0], cordinates[1], 10, 10);
         if (Math.round(Math.random() * 2) % 2 == 0)
             this.type = PowerUptype.FragBomb;
         else
@@ -25,5 +23,10 @@ public class Powrup extends Thing {
             graphics.setColor(Color.RED);
 
         super.draw(graphics);
+    }
+
+    void setShape( Shape shape)
+    {
+        this.shape = shape;
     }
 }
