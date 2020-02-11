@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 
 public class ListExample
 {
@@ -17,6 +18,13 @@ public class ListExample
         label.setSize(500,100);
         JButton b=new JButton("Show");
         b.setBounds(200,150,80,30);
+
+        JFormattedTextField f1 = new JFormattedTextField(new DecimalFormat("#"));
+
+        f1.setBounds(400,400,50,50);
+        f1.setColumns(20);
+        f.add(f1);
+
 
         final DefaultListModel<String> maplist = new DefaultListModel<>();
         maplist.addElement("Map1");
@@ -43,6 +51,7 @@ public class ListExample
             public void valueChanged(ListSelectionEvent e) {
                 if (map.getSelectedIndex() == 1) {
                     lbl.setIcon(new ImageIcon(image));
+                    System.out.println(f1.getText());
                 }
                 if (map.getSelectedIndex()==0)
                     lbl.setIcon(null);

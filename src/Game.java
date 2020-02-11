@@ -63,14 +63,14 @@ public class Game extends JFrame {
        this.everyThing.add(player2.getTank());
        this.innerthings.add(player2.getTank());
        this.innerthings.add(player1.getTank());
-        this.everyThing.add(player1.board);
-        this.everyThing.add(player2.board);
+       this.everyThing.add(player1.board);
+       this.everyThing.add(player2.board);
 
 
     }
 
-    static void game() {
-        Game game = new Game(30,3,1);
+    static void game(int shotlimit , int roundtoWin , int map) {
+        Game game = new Game(shotlimit,roundtoWin,map);
         game.addKeyListener(new GameActionListener());
         game.setVisible(true);
         new Timer(10,
@@ -108,7 +108,7 @@ public class Game extends JFrame {
     ) {
         RoundChecker(event);
         this.time++;
-        powerupMaker();
+     //   powerupMaker();
        Timershotfunction();
 
         boolean contactplayer2 = false;

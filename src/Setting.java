@@ -47,12 +47,12 @@ public class Setting extends JFrame {
         JLabel roundstowinlabel = new JLabel("Rounds to Win:");
         roundstowinlabel.setBounds(50,150,100,20);
 
-        JFormattedTextField shotslimittext = new JFormattedTextField(new DecimalFormat("#;"));
+        this.shotslimittext = new JFormattedTextField(new DecimalFormat("#;"));
         shotslimittext.setValue(shotlimit);
         shotslimittext.setColumns(10);
        shotslimittext.setBounds(150,100,100,20);
 
-        JFormattedTextField roundstowintext = new JFormattedTextField(new DecimalFormat("#;"));
+       this.roundstowintext = new JFormattedTextField(new DecimalFormat("#;"));
         roundstowintext.setValue(roundstowin);
         roundstowintext.setColumns(10);
         roundstowintext.setBounds(150,150,100,20);
@@ -61,35 +61,25 @@ public class Setting extends JFrame {
         frame.add(shotslimittext);
         frame.add(roundstowinlabel);
         frame.add(roundstowintext);
-        
-
-        frame.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent e) {
-                Object source = e.getSource();
-                if (source == shotslimittext) {
-                    Setting.this.shotslimit = ((int) shotslimittext.getValue());
-                }
-                else if (source == roundstowintext) {
-                    Setting.this.Roundstowin = ((int) roundstowintext.getValue());
-                }
-            }
-        });
-
 
         final DefaultListModel<String> maplist = new DefaultListModel<>();
         maplist.addElement("Map1");
         maplist.addElement("Map2");
         maplist.addElement("Map3");
 
-        final JList<String> map = new JList<>(maplist);
+        map = new JList<>(maplist);
         map.setSelectedIndex(0);
         map.setBounds(300,100, 75,75);
 
          BufferedImage image = null;
+        BufferedImage image2 = null;
+        BufferedImage image3 = null;
+
 
         try {
             image = ImageIO.read(new File("/Users/hossein/Downloads/Ap-final-project-Teacher-Revision/Map1.png"));
+            image2 =ImageIO.read(new File("/Users/hossein/Downloads/Ap-final-project-Teacher-Revision/map2.png"));
+            image3 = ImageIO.read(new File("/Users/hossein/Downloads/Ap-final-project-Teacher-Revision/map3.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,14 +92,20 @@ public class Setting extends JFrame {
 
 
         BufferedImage finalImage = image;
+        BufferedImage finalImage1 = image3;
+        BufferedImage finalImage2 = image2;
         map.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if (map.getSelectedIndex() == 1) {
+                if (map.getSelectedIndex() == 0) {
                     lbl.setIcon(new ImageIcon(finalImage));
                 }
-                if (map.getSelectedIndex()==0)
-                    lbl.setIcon(null);
+                if (map.getSelectedIndex()==1)
+                    lbl.setIcon(new ImageIcon(finalImage2));
+
+                if (map.getSelectedIndex()==2)
+                    lbl.setIcon(new ImageIcon(finalImage1));
+
             }
         });
         confirmb();
@@ -123,6 +119,9 @@ public class Setting extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 frame.setVisible(false);
+                Firstpage.setShotslimit(Setting.this.shotslimit);
+                Firstpage.setRoundstowin(Setting.this.Roundstowin);
+                Firstpage.setMap(Setting.this.maptochoose);
                 Firstpage.firstpag();
             }
         });
@@ -136,9 +135,9 @@ public class Setting extends JFrame {
         confirmb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Setting.this.shotslimit = Integer.valueOf(shotslimittext.getText());
-                Setting.this.Roundstowin = Integer.valueOf(roundstowintext.getText());
-                Setting.this.maptochoose = map.getSelectedIndex()+1;
+                Setting.this.shotslimit = Integer.parseInt(Setting.this.shotslimittext.getText());
+                Setting.this.Roundstowin = Integer.parseInt(Setting.this.roundstowintext.getText());
+                Setting.this.maptochoose = Setting.this.map.getSelectedIndex()+1;
             }
         });
         frame.add(confirmb);

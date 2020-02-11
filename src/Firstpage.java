@@ -6,7 +6,9 @@ public class Firstpage extends JFrame {
     private static Firstpage firstpage;
     boolean start;
     JFrame frame;
-
+   private static int shotslimit=20;
+   private static int roundstowin = 3;
+   private static int map = 1;
     private Firstpage() {
         JFrame jframe = new JFrame("Battle of Tanks");
         this.frame = jframe;
@@ -46,7 +48,7 @@ public class Firstpage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
               frame.setVisible(false);
-                Game.game();
+                Game.game(Firstpage.this.shotslimit,Firstpage.this.roundstowin,Firstpage.this.map);
             }
         });
 
@@ -62,7 +64,7 @@ public class Firstpage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
-                Setting.Settingpage(20,3,1);
+                Setting.Settingpage(Firstpage.shotslimit,Firstpage.roundstowin,Firstpage.map);
             }
         });
     }
@@ -79,6 +81,18 @@ public class Firstpage extends JFrame {
         Firstpage firstpage = Firstpage.getFirstpage();
         if (!firstpage.frame.isVisible())
             firstpage.frame.setVisible(true);
+    }
+
+    public static void  setShotslimit(int shotslimit) {
+        Firstpage.shotslimit = shotslimit;
+    }
+
+    public static void setRoundstowin(int roundstowin) {
+        Firstpage.roundstowin = roundstowin;
+    }
+
+    public static void setMap(int map) {
+        Firstpage.map = map;
     }
 }
 
