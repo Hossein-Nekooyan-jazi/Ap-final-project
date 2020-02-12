@@ -80,9 +80,9 @@ public class Setting extends JFrame {
 
 
         try {
-            image = ImageIO.read(new File("/Users/hossein/Downloads/Ap-final-project-Teacher-Revision/Map1.png"));
-            image2 =ImageIO.read(new File("/Users/hossein/Downloads/Ap-final-project-Teacher-Revision/map2.png"));
-            image3 = ImageIO.read(new File("/Users/hossein/Downloads/Ap-final-project-Teacher-Revision/map3.png"));
+            image = ImageIO.read(new File("./Map1.png"));
+            image2 =ImageIO.read(new File("./map2.png"));
+            image3 = ImageIO.read(new File("./map3.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

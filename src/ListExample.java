@@ -35,7 +35,7 @@ public class ListExample
         map.setSelectedIndex(0);
         map.setBounds(100,100, 75,75);
 
-        BufferedImage image =  ImageIO.read(new File("/Users/hossein/Downloads/Ap-final-project-Teacher-Revision/Map1.png"));
+        BufferedImage image =  ImageIO.read(new File("./Map1.png"));
 
         JLabel lbl = new JLabel();
 
