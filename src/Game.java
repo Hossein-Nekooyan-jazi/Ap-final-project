@@ -1,11 +1,11 @@
 import util.FileHandler;
+import util.PowerUptype;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Ellipse2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,13 +17,15 @@ public class Game extends JFrame {
     List<Thing> everyThing = new ArrayList<>();
     Player player1 = new Player("Player 1", 10, 30,0);
     Player player2 = new Player("Player 2", 400, 30,0);
-    List<Shot> shotsInTheAirplayer1 = new ArrayList<>();
-    List<Shot> ShotsInTheAirplayer2 = new ArrayList<>();
+    List<Shot> shot_and_frag1 = new ArrayList<>();
+    List<Shot> shot_and_frag2 = new ArrayList<>();
     List<Wall> walls = new LinkedList<>();
     List<Powrup> powrups = new LinkedList<>();
     JLabel shotsalarmplayer1 = new JLabel();
     JLabel shotsalarmplayer2 = new JLabel();
     List<Thing> innerthings = new LinkedList<>();
+    static boolean frofbomb_is_on1 = false;
+    static boolean frofbomb_is_on2 = false;
 
     int shotlimit;
 
@@ -90,6 +92,7 @@ public class Game extends JFrame {
        boolean noContact = true;
        while(true) {
            for (Thing thing : innerthings) {
+
                     if(thing.shape.intersects(roundomshape)) {
                         noContact = false;
                         break;
@@ -97,8 +100,9 @@ public class Game extends JFrame {
            }
            if(noContact)
                break;
+            noContact = true;
            cordinates[0] = 50 + (int) (Math.random() * (Game.WIDTH - 100));
-           cordinates[1] = 100 + (int) (Math.random() * (Game.HEIGHT - 150));
+           cordinates[1] = 100 + (int) (Math.random() *  (Game.HEIGHT - 150));
             roundomshape =  new Rectangle(cordinates[0], cordinates[1],25,25);
        }
         return cordinates;
@@ -130,16 +134,39 @@ public class Game extends JFrame {
 
         }
 
-        for (int n = 0; (n < shotsInTheAirplayer1.size() && !contactplayer2); n++) {
-            Shot shot = shotsInTheAirplayer1.get(n);
+
+
+
+
+
+        for (int n = 0; (n < shot_and_frag1.size() && !contactplayer2); n++) {
+            Shot shot = shot_and_frag1.get(n);
             for (Wall wall : this.walls) {
                 if (p2Tank.contacts(shot)) {
                     contactplayer2 = true;
                     break;
                 }
                 if (wall.contacts(shot)) {
-                    shot.bounceAgainst(wall);
-                    shot.step();
+                    if (!(shot instanceof Fragbomb)) {
+                        shot.bounceAgainst(wall);
+                        shot.step();
+                        break;
+                    } else {
+                        this.shot_and_frag1.remove(shot);
+                        this.everyThing.remove(shot);
+                        Shot shot1 = new Shot(shot.getX(), shot.getY(), shot.direction + Math.PI / 3 , Color.red);
+                        this.shot_and_frag1.add(shot1);
+                        this.everyThing.add(shot1);
+                        Shot shot2 = new Shot(shot.getX(), shot.getY(), shot.direction - Math.PI / 3 ,Color.red);
+                        this.shot_and_frag1.add(shot2);
+                        this.everyThing.add(shot2);
+                        Shot shot3 = new Shot(shot.getX(), shot.getY(), shot.direction + Math.PI / 4 , Color.red);
+                        this.shot_and_frag1.add(shot3);
+                        this.everyThing.add(shot3);
+                        Shot shot4 = new Shot(shot.getX(), shot.getY(), shot.direction - Math.PI / 4 , Color.red);
+                        this.shot_and_frag1.add(shot4);
+                        this.everyThing.add(shot4);
+                    }
                     break;
                 }
             }
@@ -147,17 +174,34 @@ public class Game extends JFrame {
                 break;
             shot.step();
         }
-
-        for (int n = 0; (n < ShotsInTheAirplayer2.size() && !contactplayer2); n++) {
-            Shot shot = ShotsInTheAirplayer2.get(n);
+        for (int n = 0; (n < shot_and_frag2.size() && !contactplayer2); n++) {
+            Shot shot = shot_and_frag2.get(n);
             for (Wall wall : this.walls) {
-                if (p1Tank.contacts(shot)) {
-                    contactplayer1 = true;
+                if (p2Tank.contacts(shot)) {
+                    contactplayer2 = true;
                     break;
                 }
                 if (wall.contacts(shot)) {
-                    shot.bounceAgainst(wall);
-                    shot.step();
+                    if (!(shot instanceof Fragbomb)) {
+                        shot.bounceAgainst(wall);
+                        shot.step();
+                        break;
+                    } else {
+                        this.shot_and_frag2.remove(shot);
+                        this.everyThing.remove(shot);
+                        Shot shot1 = new Shot(shot.getX(), shot.getY(), shot.direction + Math.PI / 3 , Color.red);
+                        this.shot_and_frag2.add(shot1);
+                        this.everyThing.add(shot1);
+                        Shot shot2 = new Shot(shot.getX(), shot.getY(), shot.direction - Math.PI / 3 , Color.red);
+                        this.shot_and_frag2.add(shot2);
+                        this.everyThing.add(shot2);
+                        Shot shot3 = new Shot(shot.getX(), shot.getY(), shot.direction + Math.PI / 4 , Color.red);
+                        this.shot_and_frag2.add(shot3);
+                        this.everyThing.add(shot3);
+                        Shot shot4 = new Shot(shot.getX(), shot.getY(), shot.direction - Math.PI / 4 , Color.red);
+                        this.shot_and_frag2.add(shot4);
+                        this.everyThing.add(shot4);
+                    }
                     break;
                 }
             }
@@ -165,26 +209,29 @@ public class Game extends JFrame {
                 break;
             shot.step();
         }
+
+
+
         if (contactplayer2 || contactplayer1) {
             newround(contactplayer1,contactplayer2);
         }
 
-        this.shotsInTheAirplayer1.forEach(Shot::growOld);
-        this.ShotsInTheAirplayer2.forEach(Shot::growOld);
-        for (int n = 0; n < shotsInTheAirplayer1.size(); n++) {
-            Shot shot = shotsInTheAirplayer1.get(n);
+        this.shot_and_frag1.forEach(Shot::growOld);
+        this.shot_and_frag2.forEach(Shot::growOld);
+        for (int n = 0; n < shot_and_frag1.size(); n++) {
+            Shot shot = shot_and_frag1.get(n);
             if (shot.isDead()) {
-                shotsInTheAirplayer1.remove(shot);
+                shot_and_frag1.remove(shot);
                 everyThing.remove(shot);
             }
 
 
 
         }
-        for (int n = 0; n < ShotsInTheAirplayer2.size(); n++) {
-            Shot shot = ShotsInTheAirplayer2.get(n);
+        for (int n = 0; n < shot_and_frag2.size(); n++) {
+            Shot shot = shot_and_frag2.get(n);
             if (shot.isDead()) {
-                ShotsInTheAirplayer2.remove(shot);
+                shot_and_frag2.remove(shot);
                 everyThing.remove(shot);
             }
 
@@ -244,6 +291,18 @@ public class Game extends JFrame {
         if (listener.p1Move ) {
             if(player1.tank.contacts(p2Tank))
                 p1Tank.direction = Math.PI + p1Tank.direction;
+            //mohammad
+            for (Powrup powrup : this.powrups) {
+                if (p1Tank.shape.intersects((Rectangle)powrup.shape)){
+                    this.powrups.remove(powrup);
+                    this.everyThing.remove(powrup);
+                    if (powrup.type == PowerUptype.FragBomb)
+                        Game.frofbomb_is_on1 = true;
+                    else {}
+                    break;
+                }
+            }
+            //mohammad
 
             p1Tank.step();
         }
@@ -254,17 +313,25 @@ public class Game extends JFrame {
 
         if (listener.p1Left)
             p1Tank.turnLeft();
-
-        if (listener.p1Fire && player1.shotsfired< this.shotlimit && player1.getTank().isShotisReady()) {
+//
+        if (listener.p1Fire && player1.shotsfired< this.shotlimit && player1.getTank().isShotisReady() && !(Game.frofbomb_is_on1)) {
             Shot shot = new Shot(
                     p1Tank.getGunX(), p1Tank.getGunY(), p1Tank.direction , Color.RED
             );
             player1.setTimershot(1);
             player1.getTank().setShotisReady(false);
-            this.shotsInTheAirplayer1.add(shot);
+            this.shot_and_frag1.add(shot);
             this.everyThing.add(shot);
             this.player1.shotsfired++;
         }
+        if(listener.p1Fire && Game.frofbomb_is_on1) {
+            listener.p1Fire = false;
+            Game.frofbomb_is_on1 = false;
+            Shot shot = new Fragbomb(p1Tank.getGunX(), p1Tank.getGunY(), p1Tank.direction, Color.GREEN);
+            this.everyThing.add(shot);
+            this.shot_and_frag1.add(shot);
+        }
+
         shotlimitchecker(this.player1,this.player2);
         if(listener.exit)
         {
@@ -289,6 +356,16 @@ public class Game extends JFrame {
         {
             if(player1.tank.contacts(p2Tank))
                 p2Tank.direction = Math.PI + p2Tank.direction;
+            for (Powrup powrup : this.powrups) {
+                if (p2Tank.shape.intersects((Rectangle)powrup.shape)){
+                    this.powrups.remove(powrup);
+                    this.everyThing.remove(powrup);
+                    if (powrup.type == PowerUptype.FragBomb)
+                        Game.frofbomb_is_on2 = true;
+                    else {}
+                    break;
+                }
+            }
 
             p2Tank.step();
         }
@@ -298,7 +375,7 @@ public class Game extends JFrame {
         if(listener.p2Left)
             p2Tank.turnLeft();
 
-        if (listener.p2Fire && player2.shotsfired< this.shotlimit && player2.getTank().isShotisReady()) {
+        if (listener.p2Fire && player2.shotsfired< this.shotlimit && player2.getTank().isShotisReady() && !(Game.frofbomb_is_on2)) {
             Shot shot = new Shot(
                     p2Tank.getGunX(), p2Tank.getGunY(), p2Tank.direction,Color.blue
             );
@@ -306,9 +383,17 @@ public class Game extends JFrame {
             player2.setTimershot(1);
             player2.getTank().setShotisReady(false);
 
-            this.ShotsInTheAirplayer2.add(shot);
+            this.shot_and_frag2.add(shot);
             this.everyThing.add(shot);
             this.player2.shotsfired++;
+        }
+        //mohammad
+        if(listener.p2Fire && Game.frofbomb_is_on2) {
+            listener.p2Fire = false;
+            Game.frofbomb_is_on2 = false;
+            Shot shot = new Fragbomb(p1Tank.getGunX(), p1Tank.getGunY(), p1Tank.direction, Color.GREEN);
+            this.everyThing.add(shot);
+            this.shot_and_frag2.add(shot);
         }
 
     }
@@ -329,16 +414,16 @@ public class Game extends JFrame {
             this.player1.newRound(false);
             this.player2.newRound(false);
         }
-        while(shotsInTheAirplayer1.size()!=0)
+        while(shot_and_frag1.size()!=0)
         {
-            this.everyThing.remove(shotsInTheAirplayer1.get(0));
-            this.shotsInTheAirplayer1.remove(shotsInTheAirplayer1.get(0));
+            this.everyThing.remove(shot_and_frag1.get(0));
+            this.shot_and_frag1.remove(shot_and_frag1.get(0));
         }
 
-        while(ShotsInTheAirplayer2.size()!=0)
+        while(shot_and_frag2.size()!=0)
         {
-            this.everyThing.remove(ShotsInTheAirplayer2.get(0));
-            this.ShotsInTheAirplayer2.remove(ShotsInTheAirplayer2.get(0));
+            this.everyThing.remove(shot_and_frag2.get(0));
+            this.shot_and_frag2.remove(shot_and_frag2.get(0));
         }
         shotsalarmplayer1.setText("");
         shotsalarmplayer2.setText("");
