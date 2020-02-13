@@ -77,8 +77,24 @@ public class Setting extends JFrame {
          BufferedImage image = null;
         BufferedImage image2 = null;
         BufferedImage image3 = null;
+        JButton aK = new JButton("A");
+        aK.setBounds(400,400,20,20);
+        boolean []a = new boolean[1];
+        aK.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+            }
+        );
 
-
+        frame.add(aK);
+    frame.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            a[0] = true;
+            System.out.println("dsdf");
+        }
+    });
         try {
             image = ImageIO.read(new File("./Map1.png"));
             image2 =ImageIO.read(new File("./map2.png"));
